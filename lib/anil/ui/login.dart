@@ -37,7 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool _isValid = false;
+  
 
     return Scaffold(
       body: SafeArea(
@@ -48,13 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               TextFormField(
                 controller: _emailController,
-                onChanged: (value) {
-                  setState(() {
-                    setState(() {
-                      _isValid = EmailValidator.validate(value);
-                    });
-                  });
-                },
+                
               ),
               TextFormField(
                 controller: _passController,

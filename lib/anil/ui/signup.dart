@@ -1,3 +1,4 @@
+import 'package:api_userlist/anil/models/signup_model.dart';
 import 'package:api_userlist/anil/state_management.dart/signup_getx.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +41,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     bool passToggle = true;
-
+    
     return Scaffold(
         appBar: AppBar(
           title: const Text('Getx'),
@@ -154,7 +155,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               controller.signin();
                             }
                           },
-                          child: const Text('SignUp')),
+                          child: controller.isLoggingIn
+                        ? const CircularProgressIndicator()
+                        : const Text("SignIn")),
                     ],
                   ))),
         ));

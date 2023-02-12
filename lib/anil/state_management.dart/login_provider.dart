@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class LoginProvider with ChangeNotifier {
   LoginModel? loginModel;
   bool isLoggingIn = false;
-  bool isChecked = false;
+  
 
   void login(BuildContext context,
       {required String email, required String password}) async {
@@ -21,8 +21,5 @@ class LoginProvider with ChangeNotifier {
     );
   }
 
-  void tAndCCheckBox() {
-    isChecked = !isChecked;
-    notifyListeners();
-  }
+  
 }
