@@ -1,5 +1,7 @@
 import 'package:api_userlist/anil/state_management.dart/signup_getx.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -37,6 +39,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool passToggle = true;
+
     return Scaffold(
         appBar: AppBar(
           title: const Text('Getx'),
@@ -50,53 +54,107 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     children: [
                       TextFormField(
                         controller: _nameController,
-                        decoration: const InputDecoration(
-                            label: Text('Name'),
+                        decoration: InputDecoration(
+                            label: const Text('Name'),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(25.0),
+                                borderSide:
+                                    const BorderSide(color: Colors.black)),
                             hintText: 'Please enter your name here...',
-                            prefixIcon: Icon(
+                            prefixIcon: const Icon(
                               Icons.person,
                               color: Colors.black87,
                             )),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Name cannot be empty";
+                          } else if (value.length < 2) {
+                            return "Enter a valid name";
+                          }
+                          return null;
+                        },
                       ),
                       TextFormField(
                         controller: _emailController,
-                        decoration: const InputDecoration(
-                            label: Text('Email'),
-                            hintText: 'Please enter your name here...',
-                            prefixIcon: Icon(
+                        decoration: InputDecoration(
+                            label: const Text('Email'),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(25.0),
+                                borderSide:
+                                    const BorderSide(color: Colors.black)),
+                            hintText: 'Please enter your email here...',
+                            prefixIcon: const Icon(
                               Icons.email,
                               color: Colors.black87,
                             )),
+                       validator: (value) =>
+                                    EmailValidator.validate(value!)
+                                        ? null
+                                        : "Please enter a valid email",
                       ),
-                      TextFormField(
+                      IntlPhoneField(
                         controller: _phoneNoController,
-                        decoration: const InputDecoration(
-                            label: Text('Phone Number'),
-                            hintText: 'Please enter your name here...',
-                            prefixIcon: Icon(
+                        initialCountryCode: 'IN',
+                        
+                        decoration: InputDecoration(
+                            label: const Text('Phone Number'),
+                            counterText: '',
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(25.0),
+                                borderSide:
+                                    const BorderSide(color: Colors.black)),
+                            hintText: 'Please enter your phone number here...',
+                            prefixIcon: const Icon(
                               Icons.call,
                               color: Colors.black87,
                             )),
                       ),
                       TextFormField(
+                        obscureText: passToggle,
                         controller: _passController,
-                        decoration: const InputDecoration(
-                            label: Text('Password'),
-                            hintText: 'Please enter your name here...',
-                            prefixIcon: Icon(
+                        decoration: InputDecoration(
+                            label: const Text('Password'),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(25.0),
+                                borderSide:
+                                    const BorderSide(color: Colors.black)),
+                            hintText: 'Please enter your password here...',
+                            prefixIcon: const Icon(
                               Icons.lock,
                               color: Colors.black87,
-                            )),
+                            ),
+                              suffixIcon: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              passToggle = !passToggle;
+                            });
+                          },
+                          child: Icon(
+                            passToggle == true
+                              ? Icons.visibility_off : Icons.visibility),
+                        ),),
+                      
+                        validator: (value) {
+                          RegExp regex = RegExp(
+                              r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
+                          var passNonNullValue = value ?? "";
+                          if (passNonNullValue.isEmpty) {
+                            return ("Password is required");
+                          } else if (passNonNullValue.length < 6) {
+                            return ("Password Must be more than 5 characters");
+                          } else if (!regex.hasMatch(passNonNullValue)) {
+                            return ("Password should contain UpperCase Alphabet, LowerCase Alphabet, Digit and Special character");
+                          }
+                          return null;
+                        },
                       ),
-                      
-                         FloatingActionButton(
-                            onPressed: () {
-                              if (_signinKey.currentState!.validate()) {
-                                controller.signin();
-                              }
-                            },
-                            child: const Text('SignUp')),
-                      
+                      FloatingActionButton(
+                          onPressed: () {
+                            if (_signinKey.currentState!.validate()) {
+                              controller.signin();
+                            }
+                          },
+                          child: const Text('SignUp')),
                     ],
                   ))),
         ));

@@ -1,5 +1,6 @@
 import 'package:api_userlist/anil/state_management.dart/login_provider.dart';
 import 'package:api_userlist/anil/ui/signup.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -36,6 +37,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool _isValid = false;
+
     return Scaffold(
       body: SafeArea(
         child: Form(
@@ -45,28 +48,34 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               TextFormField(
                 controller: _emailController,
+                onChanged: (value) {
+                  setState(() {
+                    setState(() {
+                      _isValid = EmailValidator.validate(value);
+                    });
+                  });
+                },
               ),
               TextFormField(
                 controller: _passController,
               ),
-              Consumer<LoginProvider>(
-                builder: (context, loginModel, child) {
-                  return TextButton(
-                      onPressed: () {
-                        if (_loginKey.currentState!.validate()) {
-                          _loginProvider.login(
-                            context,
-                              email: _emailController.text.trim(),
-                              password: _passController.text.trim());
-                        }
-                      },
-                      child: loginModel.isLoggingIn ? const CircularProgressIndicator() :  const Text("Login"));
-                }
-              ),
+              Consumer<LoginProvider>(builder: (context, loginModel, child) {
+                return TextButton(
+                    onPressed: () {
+                      if (_loginKey.currentState!.validate()) {
+                        _loginProvider.login(context,
+                            email: _emailController.text.trim(),
+                            password: _passController.text.trim());
+                      }
+                    },
+                    child: loginModel.isLoggingIn
+                        ? const CircularProgressIndicator()
+                        : const Text("Login"));
+              }),
               GestureDetector(
                 child: TextButton(
-                  onPressed: () => Get.to(()=> const SignUpScreen()),
-                  child: const Text('Dont have an account?')),
+                    onPressed: () => Get.to(() => const SignUpScreen()),
+                    child: const Text('Dont have an account?')),
               )
             ],
           ),
