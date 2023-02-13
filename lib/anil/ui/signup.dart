@@ -1,7 +1,7 @@
-import 'package:api_userlist/anil/models/signup_model.dart';
 import 'package:api_userlist/anil/state_management.dart/signup_getx.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -17,11 +17,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
   late TextEditingController _passController;
   late TextEditingController _nameController;
   late TextEditingController _phoneNoController;
-  late SignInController controller;
+  SignInController controller = Get.put(SignInController());
 
   @override
   void initState() {
-    controller = SignInController();
+    
     _emailController = TextEditingController();
     _passController = TextEditingController();
     _nameController = TextEditingController();
@@ -41,7 +41,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     bool passToggle = true;
-    
+
     return Scaffold(
         appBar: AppBar(
           title: const Text('Getx'),
@@ -88,15 +88,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               Icons.email,
                               color: Colors.black87,
                             )),
-                       validator: (value) =>
-                                    EmailValidator.validate(value!)
-                                        ? null
-                                        : "Please enter a valid email",
+                        validator: (value) => EmailValidator.validate(value!)
+                            ? null
+                            : "Please enter a valid email",
                       ),
                       IntlPhoneField(
                         controller: _phoneNoController,
                         initialCountryCode: 'IN',
-                        
                         decoration: InputDecoration(
                             label: const Text('Phone Number'),
                             counterText: '',
@@ -114,27 +112,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         obscureText: passToggle,
                         controller: _passController,
                         decoration: InputDecoration(
-                            label: const Text('Password'),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(25.0),
-                                borderSide:
-                                    const BorderSide(color: Colors.black)),
-                            hintText: 'Please enter your password here...',
-                            prefixIcon: const Icon(
-                              Icons.lock,
-                              color: Colors.black87,
-                            ),
-                              suffixIcon: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              passToggle = !passToggle;
-                            });
-                          },
-                          child: Icon(
-                            passToggle == true
-                              ? Icons.visibility_off : Icons.visibility),
-                        ),),
-                      
+                          label: const Text('Password'),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(25.0),
+                              borderSide:
+                                  const BorderSide(color: Colors.black)),
+                          hintText: 'Please enter your password here...',
+                          prefixIcon: const Icon(
+                            Icons.lock,
+                            color: Colors.black87,
+                          ),
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                passToggle = !passToggle;
+                              });
+                            },
+                            child: Icon(passToggle == true
+                                ? Icons.visibility_off
+                                : Icons.visibility),
+                          ),
+                        ),
                         validator: (value) {
                           RegExp regex = RegExp(
                               r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
@@ -150,14 +148,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         },
                       ),
                       FloatingActionButton(
-                          onPressed: () {
-                            if (_signinKey.currentState!.validate()) {
-                              controller.signin();
-                            }
-                          },
-                          child: controller.isLoggingIn
-                        ? const CircularProgressIndicator()
-                        : const Text("SignIn")),
+                            onPressed: () {
+                              if (_signinKey.currentState!.validate()) {
+                                controller.fetchData();
+                              }
+                            },
+                            child: Obx(
+                              () => controller.isLoggingIn.value
+                                  ? const CircularProgressIndicator(color: Colors.white,)
+                                  : const Text("SignIn"),
+                            )),
+                    
                     ],
                   ))),
         ));

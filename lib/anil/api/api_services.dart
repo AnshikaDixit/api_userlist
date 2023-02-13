@@ -21,17 +21,17 @@ class ApiServices {
       return null;
     }
   }
-  static Future<SignInModel?> signInApi() async {
-    try {
-      Response response = await get(
-        Uri.parse("https://reqres.in/api/users?page=2",)
-        );
-      SignInModel signInModel = SignInModel.fromJson(jsonDecode(response.body));
-      return signInModel;
-    } catch (e) {
-      return null;
-    }
-  }
+  // static Future<SignInModel?> signInApi() async {
+  //   try {
+  //     Response response = await get(
+  //       Uri.parse("https://reqres.in/api/users?page=2",)
+  //       );
+  //     SignInModel signInModel = SignInModel.fromJson(jsonDecode(response.body));
+  //     return signInModel;
+  //   } catch (e) {
+  //     return null;
+  //   }
+  // }
 
   
 }
