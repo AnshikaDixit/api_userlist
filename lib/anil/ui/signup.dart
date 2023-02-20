@@ -158,7 +158,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   ? const CircularProgressIndicator(color: Colors.white,)
                                   : const Text("SignIn"),
                             )),
-                    
                     ],
                   ))),
         ));
